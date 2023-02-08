@@ -46,7 +46,7 @@ const App = () => {
       }
       {
         isValidPresupuesto &&
-          <Pressable onPress={() => setModal(true)}>
+          <Pressable onPress={() => setModal(!modal) } style={styles.presable}>
             <Image style={styles.imagen} source={require('./src/img/nuevo-gasto.png')}/>
           </Pressable>
       }
@@ -57,17 +57,20 @@ const App = () => {
 const styles = StyleSheet.create({
   contenedor: {
     backgroundColor: '#F5F5F5',
-    flex: 1
+    flex: 1,
+    position: 'relative'
   },
   header: {
     backgroundColor: '#3B82F6'
   },
+  presable: {
+    position: 'absolute',
+    right: 30,
+    bottom: 30
+  },
   imagen: {
     width: 40,
     height: 40,
-    position: 'absolute',
-    top: 90,
-    right: 20
   }
 })
 

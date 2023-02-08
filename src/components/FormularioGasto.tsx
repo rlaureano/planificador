@@ -12,7 +12,7 @@ const FormularioGasto = ({setModal}:Props) => {
     <SafeAreaView style={styles.contenedor}>
         
         <View>
-            <Pressable style={styles.btnCancelar} onLongPress={ () => setModal(false)}>
+            <Pressable style={styles.btnCancelar} onPress={ () => setModal(false)}>
                 <Text style={styles.btnCancelarText}>Cancelar</Text>
             </Pressable>
         </View>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         color: '#FFF'
     },
     formulario: {
-        ...globalStyles.contenedor
+        ...globalStyles.contenedor,
     },
     titulo: {    
         textAlign: 'center',
