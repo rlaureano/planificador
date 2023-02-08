@@ -19,6 +19,7 @@ const App = () => {
 
   const [ presupuesto, setPresupuesto ] = useState(0)
   const [ isValidPresupuesto, setIsValidPresupuesto ] = useState(false)
+  const [ gastos, setGastos ] = useState([])
 
   const handleNuevoPresupuesto = (presupuesto: any) => {
     
@@ -35,7 +36,7 @@ const App = () => {
         <Header />
         {
           isValidPresupuesto ?
-            <ControlPresupuesto presupuesto={presupuesto}/> :
+            <ControlPresupuesto presupuesto={presupuesto} gastos={gastos}/> :
             <NuevoPresupuesto presupuesto={presupuesto} setPresupuesto={setPresupuesto} handleNuevoPresupuesto={handleNuevoPresupuesto}/>
         }
       </View>
