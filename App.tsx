@@ -11,12 +11,13 @@ import ControlPresupuesto from './src/components/ControlPresupuesto';
 import FormularioGasto from './src/components/FormularioGasto';
 import Header from './src/components/Header';
 import NuevoPresupuesto from './src/components/NuevoPresupuesto';
+import { Gasto } from './src/types';
 
 const App = () => {
 
   const [ presupuesto, setPresupuesto ] = useState(0)
   const [ isValidPresupuesto, setIsValidPresupuesto ] = useState(false)
-  const [ gastos, setGastos ] = useState([])
+  const [ gastos, setGastos ] = useState<Gasto[]>([])
   const [ modal, setModal ] = useState(false)
 
   const handleNuevoPresupuesto = (presupuesto: any) => {
@@ -26,6 +27,15 @@ const App = () => {
 
     setIsValidPresupuesto(true)
 
+  }
+
+  const handleGasto = (gasto:Object) => {
+    
+    if( Object.values(gasto).includes('') )
+      return Alert.alert('Error', 'Todos los campos son obligatorios', [{text: 'Aceptar'}])
+
+      setGastos([...gastos, gasto] as Array<Gasto>)
+      
   }
 
   return (
@@ -41,7 +51,7 @@ const App = () => {
       {
         modal && 
           <Modal visible={modal} animationType='slide'>
-            <FormularioGasto setModal={setModal}/>
+            <FormularioGasto setModal={setModal} handleGasto={handleGasto}/>
           </Modal>
       }
       {
