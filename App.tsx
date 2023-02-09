@@ -6,12 +6,14 @@
  */
 
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View, Pressable, Image, Modal } from 'react-native';
+import { Alert, StyleSheet, View, Pressable, Image, Modal, Text } from 'react-native';
 import ControlPresupuesto from './src/components/ControlPresupuesto';
 import FormularioGasto from './src/components/FormularioGasto';
 import Header from './src/components/Header';
 import NuevoPresupuesto from './src/components/NuevoPresupuesto';
 import { Gasto } from './src/types';
+import { generarId } from './src/helpers'
+import ListadoGastos from './src/components/ListadoGastos';
 
 const App = () => {
 
@@ -19,7 +21,7 @@ const App = () => {
   const [ isValidPresupuesto, setIsValidPresupuesto ] = useState(false)
   const [ gastos, setGastos ] = useState<Gasto[]>([])
   const [ modal, setModal ] = useState(false)
-
+  console.log(gastos)
   const handleNuevoPresupuesto = (presupuesto: any) => {
     
     if( Number(presupuesto) <= 0 )
@@ -34,7 +36,8 @@ const App = () => {
     if( Object.values(gasto).includes('') )
       return Alert.alert('Error', 'Todos los campos son obligatorios', [{text: 'Aceptar'}])
 
-      setGastos([...gastos, gasto] as Array<Gasto>)
+    setGastos([...gastos, {...gasto, id: generarId()}] as Array<Gasto>)
+    setModal(!modal)
       
   }
 
@@ -48,6 +51,10 @@ const App = () => {
             <NuevoPresupuesto presupuesto={presupuesto} setPresupuesto={setPresupuesto} handleNuevoPresupuesto={handleNuevoPresupuesto}/>
         }
       </View>
+      {
+        isValidPresupuesto && 
+          <ListadoGastos />
+      }
       {
         modal && 
           <Modal visible={modal} animationType='slide'>
@@ -76,7 +83,7 @@ const styles = StyleSheet.create({
   presable: {
     position: 'absolute',
     right: 30,
-    bottom: 30
+    top: 660
   },
   imagen: {
     width: 40,
