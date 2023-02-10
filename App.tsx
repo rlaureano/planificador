@@ -20,7 +20,8 @@ const App = () => {
   const [ presupuesto, setPresupuesto ] = useState(0)
   const [ isValidPresupuesto, setIsValidPresupuesto ] = useState(false)
   const [ gastos, setGastos ] = useState<Gasto[]>([])
-  const [ modal, setModal ] = useState(false)
+  const [ modal, setModal ] = useState<Boolean>(false)
+  const [ gasto, setGasto ] = useState<Gasto>({} as Gasto)
 
   const handleNuevoPresupuesto = (presupuesto: any) => {
     
@@ -31,14 +32,38 @@ const App = () => {
 
   }
 
-  const handleGasto = (gasto:Object) => {
+  const handleGasto = (gasto:Gasto) => {
     
-    if( Object.values(gasto).includes('') )
+    if( [gasto.nombre, gasto.cantidad, gasto.categoria].includes('') )
       return Alert.alert('Error', 'Todos los campos son obligatorios', [{text: 'Aceptar'}])
 
-    setGastos([...gastos, {...gasto, id: generarId()}] as Array<Gasto>)
+    if( gasto?.id ) {
+      const nuevoGastos = gastos.map( item => item.id === gasto.id ? {...gasto} : item)
+      setGastos(nuevoGastos)
+    } else {
+      setGastos([...gastos, {...gasto, id: generarId(), fecha: Date.now()}] as Array<Gasto>)
+    }
+
     setModal(!modal)
       
+  }
+
+  const eliminarGasto = (id: string) => {
+
+    Alert.alert(
+      '¿Deseas eliminar este gasto?',
+      'Un gasto eliminado no se puede recuperar', 
+      [
+        { text: 'No', style: 'cancel'},
+        { text: 'Sí, eliminar', onPress: () => {
+          const nuevoGastos = gastos.filter( item => item.id !== id && item )
+          setGastos(nuevoGastos)
+          setModal(!modal)
+          setGasto({} as Gasto)
+        }}
+      ]
+    )
+
   }
 
   return (
@@ -56,13 +81,14 @@ const App = () => {
         </View>
         {
           isValidPresupuesto && 
-            <ListadoGastos gastos={gastos}/>
+            <ListadoGastos gastos={gastos} setModal={setModal} setGasto={setGasto}/>
         }
       </ScrollView>
       {
         modal && 
-          <Modal visible={modal} animationType='slide'>
-            <FormularioGasto setModal={setModal} handleGasto={handleGasto}/>
+          <Modal animationType='slide'>
+            <FormularioGasto setModal={setModal} handleGasto={handleGasto} setGasto={setGasto} 
+              gasto={gasto} eliminarGasto={eliminarGasto}/>
           </Modal>
       }
       {
