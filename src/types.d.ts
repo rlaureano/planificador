@@ -1,6 +1,6 @@
 export type Gasto = {
     nombre: string,
     cantidad: string,
-    categoris: string,
+    categoria: string,
     id: number
 }

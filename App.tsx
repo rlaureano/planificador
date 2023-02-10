@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View, Pressable, Image, Modal, Text } from 'react-native';
+import { Alert, StyleSheet, View, Pressable, Image, Modal, ScrollView } from 'react-native';
 import ControlPresupuesto from './src/components/ControlPresupuesto';
 import FormularioGasto from './src/components/FormularioGasto';
 import Header from './src/components/Header';
@@ -21,7 +21,7 @@ const App = () => {
   const [ isValidPresupuesto, setIsValidPresupuesto ] = useState(false)
   const [ gastos, setGastos ] = useState<Gasto[]>([])
   const [ modal, setModal ] = useState(false)
-  console.log(gastos)
+
   const handleNuevoPresupuesto = (presupuesto: any) => {
     
     if( Number(presupuesto) <= 0 )
@@ -43,18 +43,22 @@ const App = () => {
 
   return (
     <View style={styles.contenedor}>
-      <View style={styles.header}>
-        <Header />
+      <ScrollView>
+
+      
+        <View style={styles.header}>
+          <Header />
+          {
+            isValidPresupuesto ?
+              <ControlPresupuesto presupuesto={presupuesto} gastos={gastos}/> :
+              <NuevoPresupuesto presupuesto={presupuesto} setPresupuesto={setPresupuesto} handleNuevoPresupuesto={handleNuevoPresupuesto}/>
+          }
+        </View>
         {
-          isValidPresupuesto ?
-            <ControlPresupuesto presupuesto={presupuesto} gastos={gastos}/> :
-            <NuevoPresupuesto presupuesto={presupuesto} setPresupuesto={setPresupuesto} handleNuevoPresupuesto={handleNuevoPresupuesto}/>
+          isValidPresupuesto && 
+            <ListadoGastos gastos={gastos}/>
         }
-      </View>
-      {
-        isValidPresupuesto && 
-          <ListadoGastos />
-      }
+      </ScrollView>
       {
         modal && 
           <Modal visible={modal} animationType='slide'>
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
   presable: {
     position: 'absolute',
     right: 30,
-    top: 660
+    bottom: 30
   },
   imagen: {
     width: 40,
