@@ -82,7 +82,8 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
   header: {
-    backgroundColor: '#3B82F6'
+    backgroundColor: '#3B82F6',
+    minHeight: 400
   },
   presable: {
     position: 'absolute',
