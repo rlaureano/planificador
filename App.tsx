@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, View, Pressable, Image, Modal, ScrollView } from 'react-native';
 import ControlPresupuesto from './src/components/ControlPresupuesto';
 import FormularioGasto from './src/components/FormularioGasto';
@@ -14,6 +14,7 @@ import NuevoPresupuesto from './src/components/NuevoPresupuesto';
 import { Gasto } from './src/types';
 import { generarId } from './src/helpers'
 import ListadoGastos from './src/components/ListadoGastos';
+import Filtro from './src/components/Filtro';
 
 const App = () => {
 
@@ -22,6 +23,8 @@ const App = () => {
   const [ gastos, setGastos ] = useState<Gasto[]>([])
   const [ modal, setModal ] = useState<Boolean>(false)
   const [ gasto, setGasto ] = useState<Gasto>({} as Gasto)
+  const [ filtro, setFiltro ] = useState('')
+  const [ gastosFiltrados, setGastosFiltrados ] = useState<Gasto[]>([])
 
   const handleNuevoPresupuesto = (presupuesto: any) => {
     
@@ -66,6 +69,21 @@ const App = () => {
 
   }
 
+  useEffect( () => {
+
+    if( !filtro ) {
+
+      setGastosFiltrados(gastos)
+      
+    } else {
+
+      const filtrados = gastos.filter( item => item.categoria === filtro )
+  
+      setGastosFiltrados(filtrados)
+    }
+
+  },[filtro, gastos])
+
   return (
     <View style={styles.contenedor}>
       <ScrollView>
@@ -81,7 +99,10 @@ const App = () => {
         </View>
         {
           isValidPresupuesto && 
-            <ListadoGastos gastos={gastos} setModal={setModal} setGasto={setGasto}/>
+            <>
+              <Filtro setFiltro={setFiltro} filtro={filtro}/>
+              <ListadoGastos gastosFiltrados={gastosFiltrados} setModal={setModal} setGasto={setGasto}/>
+            </>
         }
       </ScrollView>
       {

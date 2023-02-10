@@ -4,20 +4,20 @@ import Gasto from './Gasto'
 import { Gasto as GastoType } from '../types'
 
 type Props = {
-    gastos: GastoType[],
+    gastosFiltrados: GastoType[],
     setModal: (value: Boolean) => void,
     setGasto: (value: GastoType) => void
 }
 
-const ListadoGastos = ({gastos, setModal, setGasto}:Props) => {
+const ListadoGastos = ({gastosFiltrados, setModal, setGasto}:Props) => {
     return (
         <View style={styles.contenedor}>
             <Text style={styles.titulo}>Gastos</Text>
             {
-                !gastos?.length ? (
+                !gastosFiltrados?.length ? (
                     <Text style={styles.noGasto}>No hay gastos</Text>
                 ) : (
-                    gastos.map( gasto => 
+                    gastosFiltrados.map( gasto => 
                         <Gasto gasto={gasto} key={gasto?.id} setModal={setModal} setGasto={setGasto}/>
                     )
                 )
@@ -28,7 +28,7 @@ const ListadoGastos = ({gastos, setModal, setGasto}:Props) => {
 
 const styles = StyleSheet.create({
     contenedor: {
-        marginTop: 70,
+        marginTop: 30,
         marginBottom: 100
     },
     titulo: {
