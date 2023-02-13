@@ -138,6 +138,19 @@ const App = () => {
     await AsyncStorage.setItem('gastos', JSON.stringify(gastos))
   }
 
+  const reiniciarApp = async () => {
+    Alert.alert(
+      "¿Deseas reiniciar la app?",
+      "Esto eliminará presupuesto y gastos",
+      [ {text: 'Cancelar'}, {text: 'Sí, reiniciar', onPress: async () => {
+        await AsyncStorage.clear()
+        setPresupuesto(0)
+        setIsValidPresupuesto(false)
+        setGastos([])
+      }}]
+    )
+  }
+
   return (
     <View style={styles.contenedor}>
       <ScrollView>
@@ -147,7 +160,7 @@ const App = () => {
           <Header />
           {
             isValidPresupuesto ?
-              <ControlPresupuesto presupuesto={presupuesto} gastos={gastos}/> :
+              <ControlPresupuesto presupuesto={presupuesto} gastos={gastos} reiniciarApp={reiniciarApp}/> :
               <NuevoPresupuesto presupuesto={presupuesto} setPresupuesto={setPresupuesto} handleNuevoPresupuesto={handleNuevoPresupuesto}/>
           }
         </View>
