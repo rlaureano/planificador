@@ -7,6 +7,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, View, Pressable, Image, Modal, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ControlPresupuesto from './src/components/ControlPresupuesto';
 import FormularioGasto from './src/components/FormularioGasto';
 import Header from './src/components/Header';
@@ -25,6 +26,53 @@ const App = () => {
   const [ gasto, setGasto ] = useState<Gasto>({} as Gasto)
   const [ filtro, setFiltro ] = useState('')
   const [ gastosFiltrados, setGastosFiltrados ] = useState<Gasto[]>([])
+
+  useEffect( () => {
+
+    const validPresupuestoAS = async () => {
+      const presupuestoAS = await AsyncStorage.getItem('presupuesto') 
+      
+      if( presupuestoAS  ) {
+        setPresupuesto( Number(presupuestoAS) )
+        setIsValidPresupuesto(true)
+      }
+    } 
+
+    const validaGastosAS = async () => {
+
+      const gastoasAS = await AsyncStorage.getItem('gastos')
+
+      if( gastoasAS ) {
+
+        const newGastos = JSON.parse(gastoasAS)
+        setGastos(newGastos)
+
+      }
+    }
+
+    validPresupuestoAS()
+    validaGastosAS()
+
+  },[])
+
+  useEffect( () => {
+
+    if( isValidPresupuesto ) {
+
+      const alamcenarPresupuesto =async () => {
+
+        try {
+          await AsyncStorage.setItem('presupuesto', String(presupuesto))
+        } catch (err) {
+          console.log(err)
+        } 
+
+      }
+
+      alamcenarPresupuesto()
+    }
+
+  },[isValidPresupuesto])
 
   const handleNuevoPresupuesto = (presupuesto: any) => {
     
@@ -71,6 +119,8 @@ const App = () => {
 
   useEffect( () => {
 
+    almacenarAS()
+
     if( !filtro ) {
 
       setGastosFiltrados(gastos)
@@ -83,6 +133,10 @@ const App = () => {
     }
 
   },[filtro, gastos])
+
+  const almacenarAS = async () => {
+    await AsyncStorage.setItem('gastos', JSON.stringify(gastos))
+  }
 
   return (
     <View style={styles.contenedor}>
